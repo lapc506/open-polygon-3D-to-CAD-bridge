@@ -15,7 +15,8 @@ modules:
   - name: open-polygon-cad-bridge
     buildsystem: simple
     build-commands:
-      - install -Dm755 target/release/bridge-mcp /app/bin/open-polygon-cad-bridge
+      - install -Dm755 target/release/bridge-studio /app/bin/open-polygon-cad-bridge
+      - install -Dm755 target/release/bridge-mcp /app/bin/open-polygon-cad-mcp
       - install -Dm644 packaging/flatpak/com.openpolygon.CadBridge.desktop /app/share/applications/com.openpolygon.CadBridge.desktop
       - install -Dm644 packaging/flatpak/com.openpolygon.CadBridge.metainfo.xml /app/share/metainfo/com.openpolygon.CadBridge.metainfo.xml
       - install -Dm644 packaging/flatpak/com.openpolygon.CadBridge.svg /app/share/icons/hicolor/scalable/apps/com.openpolygon.CadBridge.svg
