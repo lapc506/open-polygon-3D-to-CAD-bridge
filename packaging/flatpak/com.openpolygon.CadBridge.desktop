@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Open Polygon CAD Bridge
+Comment=CAD and CFD engineering hub
+Exec=open-polygon-cad-bridge
+Icon=com.openpolygon.CadBridge
+Terminal=false
+Type=Application
+Categories=Engineering;Development;
+StartupNotify=true

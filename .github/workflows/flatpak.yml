@@ -1,0 +1,35 @@
+name: Flatpak
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-flatpak:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Flatpak tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y flatpak flatpak-builder
+          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          flatpak install -y flathub org.freedesktop.Sdk//25.08
+
+      - name: Build Rust applications
+        run: |
+          cargo build --release -p bridge-studio -p bridge-mcp
+
+      - name: Build Flatpak
+        run: |
+          flatpak-builder --force-clean --repo=repo build-dir packaging/flatpak/com.openpolygon.CadBridge.yml
+          flatpak build-bundle repo open-polygon-cad-bridge.flatpak com.openpolygon.CadBridge
+
+      - name: Upload Flatpak bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: open-polygon-cad-bridge-flatpak
+          path: open-polygon-cad-bridge.flatpak

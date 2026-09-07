@@ -1,0 +1,11 @@
+[package]
+name = "bridge-studio"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+eframe = "0.33"
+cfd-core.workspace = true
+cfd-openfoam = { path = "../../crates/cfd-openfoam" }
+serde_json.workspace = true
