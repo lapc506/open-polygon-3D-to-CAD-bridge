@@ -8,4 +8,5 @@ license.workspace = true
 eframe = "0.33"
 cfd-core.workspace = true
 cfd-openfoam = { path = "../../crates/cfd-openfoam" }
+automation-core = { path = "../../crates/automation-core" }
 serde_json.workspace = true
