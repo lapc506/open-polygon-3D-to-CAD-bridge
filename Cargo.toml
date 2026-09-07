@@ -3,6 +3,7 @@ resolver = "2"
 members = [
   "crates/cfd-core",
   "crates/cfd-openfoam",
+  "crates/automation-core",
   "apps/bridge-mcp",
   "apps/bridge-studio",
 ]
