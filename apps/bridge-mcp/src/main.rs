@@ -1,5 +1,5 @@
 use anyhow::Result;
-use cfd_core::{CfdBackend, CfdStudy, FluidMaterial, MisterInjection, Point3, Vector3, DropletDistribution, DistributionSource};
+use cfd_core::{CfdBackend, CfdStudy, FluidMaterial, MisterInjection, Point3, Vector3, DropletDistribution, DistributionSource, CfdRunResult};
 use cfd_openfoam::OpenFoamBackend;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -36,20 +36,41 @@ fn demo_study() -> CfdStudy {
     }
 }
 
+fn study_from(params: &Value) -> Result<CfdStudy> {
+    Ok(params.get("study").cloned().map(serde_json::from_value).transpose()?.unwrap_or_else(|| Ok(demo_study()))?)
+}
+
+fn run_from(params: &Value) -> Result<CfdRunResult> {
+    Ok(serde_json::from_value(params.get("run").cloned().unwrap_or(Value::Null))?)
+}
+
 fn handle(req: &Request) -> Result<Value> {
     match req.method.as_str() {
         "tools/list" => Ok(tools()),
         "cfd.create_study" => Ok(serde_json::to_value(demo_study())?),
         "cfd.prepare" => {
-            let study: CfdStudy = req.params.get("study").cloned().map(serde_json::from_value).transpose()?.unwrap_or_else(|| Ok(demo_study()))?;
+            let study = study_from(&req.params)?;
             let backend = OpenFoamBackend::new("runs/openfoam");
             Ok(serde_json::to_value(backend.prepare(&study).map_err(|e| anyhow::anyhow!(e))?)?)
         }
-        "model.validate" => {
-            let study: CfdStudy = req.params.get("study").cloned().map(serde_json::from_value).transpose()?.unwrap_or_else(|| Ok(demo_study()))?;
-            Ok(json!({"valid": study.validate().is_ok()}))
+        "cfd.run" => {
+            let run = run_from(&req.params)?;
+            let backend = OpenFoamBackend::new("runs/openfoam");
+            Ok(serde_json::to_value(backend.run(&run).map_err(|e| anyhow::anyhow!(e))?)?)
         }
-        "model.inspect" => Ok(json!({"status":"scaffold","canonical_model":"CIM","simulation_backend":"OpenFOAM","physical_actuation":false})),
+        "cfd.get_results" => {
+            let run = run_from(&req.params)?;
+            let backend = OpenFoamBackend::new("runs/openfoam");
+            Ok(serde_json::to_value(backend.results(&run).map_err(|e| anyhow::anyhow!(e))?)?)
+        }
+        "model.validate" => {
+            let study = study_from(&req.params)?;
+            match study.validate() {
+                Ok(()) => Ok(json!({"valid": true, "errors": []})),
+                Err(e) => Ok(json!({"valid": false, "errors": [e.to_string()]})),
+            }
+        }
+        "model.inspect" => Ok(json!({"status":"desktop-scaffold","canonical_model":"CIM","simulation_backend":"OpenFOAM","physical_actuation":false})),
         _ => Ok(json!({"error":"method not implemented"})),
     }
 }
