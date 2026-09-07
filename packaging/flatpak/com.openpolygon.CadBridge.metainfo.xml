@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.openpolygon.CadBridge</id>
+  <name>Open Polygon CAD Bridge</name>
+  <summary>CAD and CFD engineering bridge</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <description>
+    <p>
+      Engineering integration bridge for a solver-neutral CAD/CFD workflow,
+      including MCP orchestration and OpenFOAM case preparation.
+    </p>
+  </description>
+  <launchable type="desktop-id">com.openpolygon.CadBridge.desktop</launchable>
+  <categories>
+    <category>Engineering</category>
+    <category>Development</category>
+  </categories>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.1.0" date="2026-09-07">
+      <description><p>Initial experimental desktop packaging.</p></description>
+    </release>
+  </releases>
+</component>
