@@ -4,6 +4,7 @@ members = [
   "crates/cfd-core",
   "crates/cfd-openfoam",
   "apps/bridge-mcp",
+  "apps/bridge-studio",
 ]
 
 [workspace.package]
