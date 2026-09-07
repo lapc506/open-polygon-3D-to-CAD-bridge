@@ -19,8 +19,9 @@ jobs:
           flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
           flatpak install -y flathub org.freedesktop.Sdk//25.08
 
-      - name: Build Rust bridge
-        run: cargo build --release -p bridge-mcp
+      - name: Build Rust applications
+        run: |
+          cargo build --release -p bridge-studio -p bridge-mcp
 
       - name: Build Flatpak
         run: |
